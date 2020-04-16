@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node_modules/.bin/nodemon index.js"
+    "dev": "node_modules/.bin/nodemon index.js",
+    "lint": "eslint ."
   },
   "author": "Zijun Zhou",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
     "nodemon": "^2.0.2"
   }
 }

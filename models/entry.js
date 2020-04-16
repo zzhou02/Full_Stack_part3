@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-var uniqueValidator = require('mongoose-unique-validator');
+var uniqueValidator = require('mongoose-unique-validator')
 mongoose.set('useFindAndModify', false)
-mongoose.set('useCreateIndex', true);
+mongoose.set('useCreateIndex', true)
 
 const url = process.env.MONGODB_URI
 console.log('connecting to', url)
@@ -21,6 +21,6 @@ entrySchema.set('toJSON', {
     delete returnedObject.__v
   }
 })
-entrySchema.plugin(uniqueValidator);
+entrySchema.plugin(uniqueValidator)
 
 module.exports = mongoose.model('Entry', entrySchema)

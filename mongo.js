@@ -21,7 +21,7 @@ const entrySchema = new mongoose.Schema({
 const Entry = mongoose.model('Entry', entrySchema)
 
 if (process.argv.length === 3) {
-  console.log('phonebook:');
+  console.log('phonebook:')
   Entry.find({}).then(result => {
     result.forEach(entry => {
       console.log(entry.name, entry.number, entry._id)
