@@ -16,9 +16,11 @@ morgan.token('body', (req, res) => {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.get('/api/persons', (req, res) => {
-  entry.find({}).then(entries => {
-    res.json(entries.map(entry => entry.toJSON()))
-  })
+  entry
+    .find({})
+    .then(entries => {
+      res.json(entries.map(entry => entry.toJSON()))
+    })
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
@@ -67,37 +69,32 @@ app.put('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body
-  if (!body) {
-    return res.status(400).json({ error: 'content missing' })
-  }
-  // else if (!body.name) {
-  //   return res.status(400).json({ error: 'name missing' })
-  // } else if (!body.number) {
-  //   return res.status(400).json({ error: 'number missing' })
-  // } else if (persons.find(person => person.name === body.name)) {
-  //   return res.status(400).json({ error: 'name must be unique' })
-  // }
   const person = new entry({
     name: body.name,
     number: body.number,
     date: new Date(),
   })
-  person.save().then(result => {
-    res.json(result.toJSON())
-  })
+  person
+    .save()
+    .then(result => {
+      res.json(result.toJSON())
+    })
+    .catch(error => next(error))
 })
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
 }
 app.use(unknownEndpoint)
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, req, res, next) => {
   console.error(error.message)
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
+    return res.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return res.status(400).json({ error: error.message })
   }
   next(error)
 }
